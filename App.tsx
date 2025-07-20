@@ -10,7 +10,7 @@ import TableNumberPage from './pages/TableNumberPage';
 import { OrderItem, MenuItem } from './types';
 import { DEFAULT_MENU_ITEMS, GST_RATE } from './constants';
 import { db } from "./firebase"; // already set up
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc,getDocs } from "firebase/firestore";
 
 export type Page = 'welcome' | 'tableNumberEntry' | 'chat' | 'bill' | 'finalConfirmation';
 
