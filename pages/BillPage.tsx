@@ -143,12 +143,12 @@ const BillPage: React.FC<BillPageProps> = ({ orderData, onConfirmAndProceed, nav
               <span className="font-semibold text-sm">Back to Chat</span>
             </button>
             <button
-              onClick={handleConfirmOrder}
-              className="bg-[#EDB403] text-[#1E2229] font-semibold py-2 px-3 sm:px-4 rounded-lg hover:bg-[#c9a002] focus:outline-none focus:ring-2 focus:ring-[#475424] focus:ring-opacity-75 transition-colors duration-150 text-sm"
-              aria-label="Confirm order and proceed"
-              disabled={items.length === 0}
+                onClick={handleConfirmOrder}
+                disabled={isSubmitting || items.length === 0}
+                className="bg-[#EDB403] text-[#1E2229] font-semibold py-2 px-3 sm:px-4 rounded-lg hover:bg-[#c9a002] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150 text-sm"
             >
-              Confirm Order
+              
+            {isSubmitting ? "Sending Order..." : "Confirm Order"}
             </button>
         </div>
       </div>
