@@ -331,3 +331,4 @@ export const sendMessageToBot = async (
     throw new Error('An unknown error occurred while communicating with the chat service during message sending.');
   }
 };
+
