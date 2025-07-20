@@ -321,7 +321,7 @@ const handleConfirmOrderAndGoToFinalConfirmation = useCallback(async () => {
       console.error("❌ Failed to send bill to Firebase:", error);
       alert("Failed to send order to kitchen.");
     } finally {
-      setIsSubmitting(false);
+      //setIsSubmitting(false);
     }
   } else {
     console.warn("⚠️ Skipped bill submission due to invalid or incomplete data.", currentBillData);
@@ -392,7 +392,6 @@ const handleConfirmOrderAndGoToFinalConfirmation = useCallback(async () => {
             onConfirmAndProceed={handleConfirmOrderAndGoToFinalConfirmation}
             navigateToChat={() => navigateTo('chat')}
             getItemNameWithPieces={getItemNameWithPiecesForBill}
-            isSubmitting={isSubmitting}
           />
         )}
         {currentPage === 'finalConfirmation' && (
