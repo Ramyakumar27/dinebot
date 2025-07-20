@@ -46,52 +46,37 @@ const App: React.FC = () => {
 
 
   useEffect(() => {
-    const loadMenu = async () => {
-      setIsMenuLoading(true);
-      setMenuLoadingError(null);
+  const loadMenuFromFirebase = async () => {
+    setIsMenuLoading(true);
+    setMenuLoadingError(null);
 
-      try {
-        const storedMenuJson = localStorage.getItem('fireFroastMenu');
-        if (storedMenuJson) {
-          const storedMenu = JSON.parse(storedMenuJson) as MenuItem[];
-          if (Array.isArray(storedMenu) && storedMenu.length > 0) {
-            setActiveMenuItems(storedMenu);
-            setIsMenuLoading(false);
-            console.log("Menu loaded from localStorage.");
-            return; 
-          }
-        }
-        console.log("No valid menu in localStorage, attempting to load from /menu.xlsx");
-        // Fetch menu.xlsx from the public path (root of the server)
-        const response = await fetch('/menu.xlsx');
-        if (!response.ok) {
-          throw new Error(`Failed to fetch menu.xlsx: ${response.statusText}. Please ensure 'menu.xlsx' is in the public root of your project.`);
-        }
-        const arrayBuffer = await response.arrayBuffer();
-        const parsedItems = await parseMenuItemsFromExcel(arrayBuffer);
+    try {
+      const menuSnapshot = await getDocs(collection(db, "menu")); // use correct collection name
+      const fetchedMenu: MenuItem[] = [];
 
-        if (parsedItems.length === 0) {
-          setMenuLoadingError("The menu.xlsx file is empty or invalid. Using default menu.");
-          setActiveMenuItems(DEFAULT_MENU_ITEMS);
-          localStorage.setItem('fireFroastMenu', JSON.stringify(DEFAULT_MENU_ITEMS));
-        } else {
-          setActiveMenuItems(parsedItems);
-          localStorage.setItem('fireFroastMenu', JSON.stringify(parsedItems));
-          console.log("Menu successfully loaded from /menu.xlsx and stored in localStorage.");
-        }
-      } catch (error) {
-        console.error("Error loading or parsing menu.xlsx:", error);
-        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred while loading the menu.";
-        setMenuLoadingError(`Failed to load menu from Excel file: ${errorMessage}. Using default built-in menu. Please ensure 'menu.xlsx' is correctly formatted and placed in the project root.`);
-        setActiveMenuItems(DEFAULT_MENU_ITEMS);
-        localStorage.setItem('fireFroastMenu', JSON.stringify(DEFAULT_MENU_ITEMS)); // Store default on error
-      } finally {
-        setIsMenuLoading(false);
+      menuSnapshot.forEach((doc) => {
+        fetchedMenu.push({ id: doc.id, ...doc.data() } as MenuItem);
+      });
+
+      if (fetchedMenu.length === 0) {
+        throw new Error("No menu items found in Firebase.");
       }
-    };
 
-    loadMenu();
-  }, []);
+      setActiveMenuItems(fetchedMenu);
+      localStorage.setItem("fireFroastMenu", JSON.stringify(fetchedMenu)); // optional caching
+      console.log("✅ Menu loaded from Firebase.");
+    } catch (error) {
+      console.error("❌ Failed to load menu from Firebase:", error);
+      setMenuLoadingError("Failed to load menu from Firebase.");
+      setActiveMenuItems(DEFAULT_MENU_ITEMS); // fallback if needed
+    } finally {
+      setIsMenuLoading(false);
+    }
+  };
+
+  loadMenuFromFirebase();
+}, []);
+
 
 
   const navigateTo = useCallback((page: Page) => {
