@@ -391,7 +391,8 @@ const handleConfirmOrderAndGoToFinalConfirmation = useCallback(async () => {
             orderData={currentBillData}
             onConfirmAndProceed={handleConfirmOrderAndGoToFinalConfirmation}
             navigateToChat={() => navigateTo('chat')}
-            getItemNameWithPieces={getItemNameWithPiecesForBill} 
+            getItemNameWithPieces={getItemNameWithPiecesForBill}
+            isSubmitting={isSubmitting}
           />
         )}
         {currentPage === 'finalConfirmation' && (
