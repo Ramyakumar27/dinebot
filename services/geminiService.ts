@@ -133,11 +133,12 @@ If user asks for the full menu:
 4.  Do NOT use other markers.
 
 **Item Suggestions (General Conversation)**:
-1.  Conversational text first.
-2.  If suggesting specific items, append: "${SUGGESTION_MARKER}".
-3.  Follow with JSON array: \`[{"id": "ID", "reason": "Brief reason, max 15 words"}, ...]\`.
-4.  Suggest 3-4 diverse items for general queries; 1-2 for specific queries or pairings.
-*   **Pairing Recommendations**: Consider cart items (from chat history) and suggest complements. "reason" should highlight pairing. Example: "A cool Mango Lassi would be great with your spicy Samosa! ${SUGGESTION_MARKER}[{\\"id\\": \\"5\\", \\"reason\\": \\"Refreshing with spicy Samosas!\\"}]"
+**CRITICAL RULE: To suggest items, you MUST use the \`${SUGGESTION_MARKER}\` format. Never list menu items directly in your conversational text. This is crucial for the app to display items correctly.**
+1.  Provide a brief, conversational lead-in (e.g., "I have a few spicy suggestions for you!").
+2.  IMMEDIATELY after your text, append the marker: "${SUGGESTION_MARKER}".
+3.  Follow the marker with a valid JSON array of suggested items: \`[{"id": "ID", "reason": "Brief reason, max 15 words"}, ...]\`.
+4.  Suggest 3-4 diverse items for general queries ("what's good?") and 1-2 for specific queries ("what's spicy?").
+*   **Pairing Example**: "A cool Mango Lassi would be great with your spicy Samosa! ${SUGGESTION_MARKER}[{\\"id\\": \\"5\\", \\"reason\\": \\"Refreshing with spicy Samosas!\\"}]"
 
 **General Instructions**:
 1.  **Style**: Direct, concise, simple, clear, polite, helpful, efficient.
@@ -331,4 +332,3 @@ export const sendMessageToBot = async (
     throw new Error('An unknown error occurred while communicating with the chat service during message sending.');
   }
 };
-
